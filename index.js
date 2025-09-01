@@ -87,9 +87,7 @@ app.post('/api/users/:_id/exercises', async (req, res) =>{
     res.json({
       _id: user._id,
       username: user.username,
-      date: exercise.date.toDateString(),
-      duration: exercise.duration,
-      description: exercise.description,
+      log: user.log
     })
   }catch(err){
     res.status(500).json({ message: "There was an error updating the user." })
