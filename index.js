@@ -98,23 +98,26 @@ app.post('/api/users/:_id/exercises', async (req, res) =>{
 })
 
 //get a user and return username, count, id, and log
-app.get('/api/users/:_id/logs?[from][&to][&limit]', async (req, res) => {
+app.get('/api/users/:_id/logs', async (req, res) => {
   const user_id = req.params._id;
-  const {from, to, limit} = req.query;
+  let {from, to, limit} = req.query;
+  try{
   const user = await User.findById(user_id);
   
   if (!user){
     return res.status(404).json({ message: "User not found" });
   }
   
-  const logs = [...user.log];
+  let logs = [...user.log];
 
   if(from){
     const fromDate = new Date(from);
+    fromDate.setHours(0,0,0,0);
     logs = logs.filter(ex => new Date(ex.date) >= fromDate)
   }
   if(to){
     const toDate = new Date(to);
+    toDate.setHours(23,59,59,999); 
     logs = logs.filter(ex => new Date(ex.date) <= toDate)
 
   }
@@ -131,7 +134,10 @@ app.get('/api/users/:_id/logs?[from][&to][&limit]', async (req, res) => {
       duration: ex.duration,
       date: new Date(ex.date).toDateString()
     })),
-  })
+  
+  })}catch(err){
+    console.log(err)
+  }
 })
 
 
