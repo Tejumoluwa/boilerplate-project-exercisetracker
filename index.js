@@ -85,14 +85,13 @@ app.post('/api/users/:_id/exercises', async (req, res) =>{
     user.log.push(exercise);
     await user.save()
     res.json({
+      _id: user._id,
       username: user.username,
-      description: exercise.description,
-      duration: exercise.duration,
       date: exercise.date.toDateString(),
-      _id: user._id
+      duration: exercise.duration,
+      description: exercise.description,
     })
   }catch(err){
-    console.log(err)
     res.status(500).json({ message: "There was an error updating the user." })
 }
 })
@@ -129,7 +128,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     _id: user.id,
     username: user.username,
     count: user.log.length,
-    logs: logs.map(ex => ({
+    log: logs.map(ex => ({
       description: ex.description,
       duration: ex.duration,
       date: new Date(ex.date).toDateString()
